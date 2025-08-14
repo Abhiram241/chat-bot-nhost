@@ -1,0 +1,144 @@
+{
+  "name": "Chatbot - sendMessage",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "sendMessage",
+        "responseMode": "lastNode"
+      },
+      "id": "WebhookTrigger",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "chatbot-sendmessage"
+    },
+    {
+      "parameters": {
+        "url": "https://boyxjecavdgltotmrdoi.hasura.eu-central-1.nhost.run/v1/graphql",
+        "method": "POST",
+        "authentication": "none",
+        "responseFormat": "json",
+        "jsonParameters": true,
+        "options": {
+          "headers": {
+            "entries": [
+              { "name": "Content-Type", "value": "application/json" },
+              {
+                "name": "x-hasura-admin-secret",
+                "value": "70n4H!=RYveEdidMaPw8Y6bSDp41BaVZ"
+              }
+            ]
+          }
+        },
+        "body": "{\n  \"query\": \"query Validate($chat_id: uuid!) { chats_by_pk(id: $chat_id) { id user_id } }\",\n  \"variables\": {\n    \"chat_id\": \"={{$json.body.input.chat_id}}\"\n  }\n}"
+      },
+      "id": "CheckChatOwnership",
+      "name": "Check Chat Ownership",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 2,
+      "position": [500, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$json.data.chats_by_pk.user_id}}",
+              "value2": "={{$json.body.session_variables['x-hasura-user-id']}}"
+            }
+          ]
+        }
+      },
+      "id": "CheckOwnershipIF",
+      "name": "IF - Chat Owner?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [750, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://openrouter.ai/api/v1/chat/completions",
+        "method": "POST",
+        "authentication": "none",
+        "responseFormat": "json",
+        "jsonParameters": true,
+        "options": {
+          "headers": {
+            "entries": [
+              {
+                "name": "Authorization",
+                "value": "Bearer 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"
+              },
+              { "name": "Content-Type", "value": "application/json" }
+            ]
+          }
+        },
+        "body": "{\n  \"model\": \"openrouter/auto\",\n  \"messages\": [\n    { \"role\": \"system\", \"content\": \"You are a helpful assistant.\" },\n    { \"role\": \"user\", \"content\": \"={{$json.body.input.content}}\" }\n  ],\n  \"temperature\": 0.7\n}"
+      },
+      "id": "CallOpenRouter",
+      "name": "Call OpenRouter",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 2,
+      "position": [1000, 200]
+    },
+    {
+      "parameters": {
+        "url": "https://boyxjecavdgltotmrdoi.hasura.eu-central-1.nhost.run/v1/graphql",
+        "method": "POST",
+        "authentication": "none",
+        "responseFormat": "json",
+        "jsonParameters": true,
+        "options": {
+          "headers": {
+            "entries": [
+              { "name": "Content-Type", "value": "application/json" },
+              {
+                "name": "x-hasura-admin-secret",
+                "value": "70n4H!=RYveEdidMaPw8Y6bSDp41BaVZ"
+              }
+            ]
+          }
+        },
+        "body": "{\n  \"query\": \"mutation Insert($chat_id: uuid!, $content: String!) { insert_messages_one(object: {chat_id: $chat_id, role: \\\"assistant\\\", content: $content}) { id content } }\",\n  \"variables\": {\n    \"chat_id\": \"={{$json.body.input.chat_id}}\",\n    \"content\": \"={{$node['Call OpenRouter'].json.choices[0].message.content}}\"\n  }\n}"
+      },
+      "id": "InsertAssistantMessage",
+      "name": "Insert Assistant Message",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 2,
+      "position": [1250, 200]
+    },
+    {
+      "parameters": {
+        "body": "{\n  \"assistant_text\": \"={{$json.data?.insert_messages_one?.content || 'No response'}}\",\n  \"message_id\": \"={{$json.data?.insert_messages_one?.id || 'undefined'}}\"\n}",
+        "options": {}
+      },
+      "id": "RespondToWebhook",
+      "name": "Return Result",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1500, 200]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [["Check Chat Ownership"]]
+    },
+    "Check Chat Ownership": {
+      "main": [["IF - Chat Owner?"]]
+    },
+    "IF - Chat Owner?": {
+      "main": [["Call OpenRouter"], []]
+    },
+    "Call OpenRouter": {
+      "main": [["Insert Assistant Message"]]
+    },
+    "Insert Assistant Message": {
+      "main": [["Return Result"]]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "versionId": "1"
+}

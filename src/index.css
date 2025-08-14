@@ -1,0 +1,7 @@
+@import "tailwindcss";
+
+/* Optional: theme customizations */
+@theme {
+  --font-family-base: "Inter", sans-serif;
+  --color-primary: oklch(0.3 0.1 310); /* a light blue variant */
+}
