@@ -1,7 +1,102 @@
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap");
 @import "tailwindcss";
 
-/* Optional: theme customizations */
+/* Custom theme with monospace font and purple accents */
 @theme {
-  --font-family-base: "Inter", sans-serif;
-  --color-primary: oklch(0.3 0.1 310); /* a light blue variant */
+  --font-family-base: "JetBrains Mono", "Consolas", "Monaco", monospace;
+  --color-primary: oklch(0.5 0.2 280); /* purple variant */
+}
+
+/* Global styles */
+* {
+  font-family: "JetBrains Mono", "Consolas", "Monaco", monospace;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a2e;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #6b46c1, #3b82f6);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #7c3aed, #2563eb);
+}
+
+/* Custom gradient backgrounds */
+.gradient-bg-primary {
+  background: linear-gradient(
+    135deg,
+    #0f0f23 0%,
+    #16213e 25%,
+    #1a1a2e 50%,
+    #16213e 75%,
+    #0f0f23 100%
+  );
+}
+
+.gradient-bg-secondary {
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #1e1b4b 100%);
+}
+
+.gradient-text-purple {
+  background: linear-gradient(135deg, #a855f7, #3b82f6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glow effects */
+.glow-purple {
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+}
+
+.glow-blue {
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+}
+
+/* Animation keyframes */
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(168, 85, 247, 0.6);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Custom button styles */
+.btn-gradient {
+  background: linear-gradient(135deg, #6b46c1, #3b82f6);
+  transition: all 0.3s ease;
+}
+
+.btn-gradient:hover {
+  background: linear-gradient(135deg, #7c3aed, #2563eb);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(168, 85, 247, 0.4);
+}
+
+/* Cursor blinking animation */
+@keyframes blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
 }

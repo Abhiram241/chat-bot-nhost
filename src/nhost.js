@@ -1,18 +1,29 @@
 // src/nhost.js
 import { NhostClient } from "@nhost/nhost-js";
 
-console.log("Nhost Environment Variables:", {
-  subdomain: import.meta.env.VITE_NHOST_SUBDOMAIN,
-  region: import.meta.env.VITE_NHOST_REGION,
-});
-
 export const nhost = new NhostClient({
   subdomain: import.meta.env.VITE_NHOST_SUBDOMAIN,
   region: import.meta.env.VITE_NHOST_REGION,
+  autoRefreshToken: true,
+  autoSignIn: true,
+  refreshIntervalTime: 5 * 60 * 1000, // Optional, Nhost handles this well by default
 });
 
-console.log("Nhost client created:", nhost);
-console.log("Nhost auth URL:", nhost.auth.url);
+// Optional: useful logging for debugging
+nhost.auth.onTokenChanged((session) => {
+  if (session) {
+    console.log("✅ Token refreshed successfully");
+  } else {
+    console.log("❌ Token refresh failed or user logged out");
+  }
+});
 
-// ✨ For browser testing in console:
+nhost.auth.onAuthStateChanged((event, session) => {
+  console.log(
+    "🔐 Auth state changed:",
+    event,
+    session ? "authenticated" : "not authenticated"
+  );
+});
+
 window.nhost = nhost;

@@ -52,6 +52,26 @@ export const INSERT_USER_MESSAGE = gql`
   }
 `;
 
+export const UPDATE_CHAT_TITLE = gql`
+  mutation UpdateChatTitle($chat_id: uuid!, $title: String!) {
+    update_chats_by_pk(pk_columns: { id: $chat_id }, _set: { title: $title }) {
+      id
+      title
+    }
+  }
+`;
+
+export const DELETE_CHAT = gql`
+  mutation DeleteChat($chat_id: uuid!) {
+    delete_messages(where: { chat_id: { _eq: $chat_id } }) {
+      affected_rows
+    }
+    delete_chats_by_pk(id: $chat_id) {
+      id
+    }
+  }
+`;
+
 // ===== SUBSCRIPTIONS =====
 export const MESSAGE_SUB = gql`
   subscription GetMessages($chatId: uuid!) {
