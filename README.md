@@ -1,4 +1,4 @@
-# Synapse: A Modern, Performant chat-bot
+# Synapse: A Modern, Performant Chat-bot
 
 This repository contains the source code for a next-generation, highly performant chatbot frontend, engineered with a cutting-edge technology stack. It leverages the synergistic power of the React and Vite ecosystems to deliver a superior developer experience (DX) and a blazing-fast, responsive user interface.
 
