@@ -77,7 +77,7 @@ const AuthGate = () => {
         toast.error("Passwords do not match");
         return;
       }
-      
+
       if (trimmedPassword.length < 8) {
         toast.error("Password must be at least 8 characters long");
         return;
@@ -94,7 +94,9 @@ const AuthGate = () => {
       } else {
         if (isSignUp) {
           setVerificationSent(true);
-          toast.success("Account created! Please verify your email before signing in.");
+          toast.success(
+            "Account created! Please verify your email before signing in."
+          );
         } else {
           toast.success("Login successful");
         }
@@ -149,9 +151,9 @@ const AuthGate = () => {
     >
       <Toaster position="top-center" />
 
-      {/* Hero Section with Typing Effect */}
+      {/* Hero Section with Typing Effect - Hidden on mobile */}
       <motion.div
-        className="text-center mb-8 sm:mb-12 max-w-4xl w-full"
+        className="text-center mb-8 sm:mb-12 max-w-4xl w-full hidden sm:block"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1, duration: 0.5 }}
@@ -176,18 +178,31 @@ const AuthGate = () => {
         </div>
       </motion.div>
 
-      {/* Auth Card */}
+      {/* Auth Container - Appears as a card on desktop, transparent on mobile */}
       <motion.div
-        className="bg-slate-800/50 backdrop-blur-lg border border-purple-500/20 rounded-2xl p-6 sm:p-8 w-full max-w-sm sm:max-w-md shadow-2xl glow-purple"
+        className="w-full max-w-md sm:bg-slate-800/50 sm:backdrop-blur-lg sm:border sm:border-purple-500/20 sm:rounded-2xl sm:p-8 sm:shadow-2xl sm:glow-purple"
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ delay: 0.3, duration: 0.3 }}
       >
-        <div className="text-center mb-6 sm:mb-8">
+        {/* Mobile-only Title */}
+        <div className="text-center mb-8 block sm:hidden">
+          <h1 className="text-4xl font-mono font-bold gradient-text-purple">
+            {isSignUp ? "Create Account" : "Welcome Back"}
+          </h1>
+          <p className="text-gray-400 font-mono text-sm mt-2">
+            {isSignUp
+              ? "Join the AI conversation"
+              : "Continue your AI journey"}
+          </p>
+        </div>
+
+        {/* Desktop Card Header - Hidden on mobile */}
+        <div className="text-center mb-6 sm:mb-8 hidden sm:block">
           <h2 className="text-2xl sm:text-3xl font-mono font-bold gradient-text-purple mb-2">
             {isSignUp ? "Create Account" : "Welcome Back"}
           </h2>
-          <p className="text-gray-400 font-mono text-xs sm:text-sm">
+          <p className="text-gray-400 font-mono text-sm">
             {isSignUp ? "Join the AI conversation" : "Continue your AI journey"}
           </p>
         </div>
@@ -197,11 +212,18 @@ const AuthGate = () => {
             <div className="flex justify-center">
               <FaEnvelope className="text-purple-400 text-4xl animate-pulse" />
             </div>
-            <h3 className="text-xl font-bold text-purple-300">Verification Email Sent</h3>
-            <p className="text-gray-300 text-sm">Please check your email and verify your account before signing in. <span className="text-yellow-300">The verification email may be in your spam folder.</span></p>
+            <h3 className="text-xl font-bold text-purple-300">
+              Verification Email Sent
+            </h3>
+            <p className="text-gray-300 text-sm">
+              Please check your email and verify your account before signing in.{" "}
+              <span className="text-yellow-300">
+                The verification email may be in your spam folder.
+              </span>
+            </p>
             <div className="flex gap-2 mt-4">
               <motion.button
-                className="flex-1 btn-gradient text-white font-mono font-semibold py-2 xs:py-2.5 sm:py-3 md:py-4 text-xs xs:text-sm sm:text-base rounded-lg shadow-lg"
+                className="flex-1 btn-gradient text-white font-mono font-semibold py-3 text-base rounded-lg shadow-lg"
                 onClick={() => setIsSignUp(false)}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
@@ -212,7 +234,7 @@ const AuthGate = () => {
                 href="https://mail.google.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 bg-red-500 hover:bg-red-600 text-white font-mono font-semibold py-2 xs:py-2.5 sm:py-3 md:py-4 text-xs xs:text-sm sm:text-base rounded-lg shadow-lg flex items-center justify-center"
+                className="flex-1 bg-red-500 hover:bg-red-600 text-white font-mono font-semibold py-3 text-base rounded-lg shadow-lg flex items-center justify-center"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -221,89 +243,97 @@ const AuthGate = () => {
             </div>
           </div>
         ) : (
-          <form onSubmit={handleAuth} className="space-y-3 xs:space-y-4 sm:space-y-6">
-             <div>
-               <input
-                 className="w-full p-2 xs:p-2.5 sm:p-3 md:p-4 text-xs xs:text-sm sm:text-base rounded-lg bg-slate-700/50 border border-purple-500/30 text-white placeholder:text-purple-300/60 outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-400/20 transition-all duration-200 font-mono"
-                 type="email"
-                 placeholder="your@email.com"
-                 value={email}
-                 onChange={(e) => setEmail(e.target.value)}
-                 autoComplete="email"
-                 required
-               />
-             </div>
+          <form onSubmit={handleAuth} className="space-y-6">
+            <div>
+              <input
+                className="w-full p-4 text-base sm:p-3 sm:text-sm rounded-lg bg-slate-700/50 border border-purple-500/30 text-white placeholder:text-purple-300/60 outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-400/20 transition-all duration-200 font-mono"
+                type="email"
+                placeholder="your@email.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                autoComplete="email"
+                required
+              />
+            </div>
 
-             <div className="relative">
-               <input
-                 className="w-full p-2 xs:p-2.5 sm:p-3 md:p-4 text-xs xs:text-sm sm:text-base rounded-lg bg-slate-700/50 border border-purple-500/30 text-white placeholder:text-purple-300/60 outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-400/20 transition-all duration-200 font-mono pr-10 xs:pr-11 sm:pr-12"
-                 type={showPassword ? "text" : "password"}
-                 placeholder="Password"
-                 value={password}
-                 onChange={(e) => setPassword(e.target.value)}
-                 autoComplete={isSignUp ? "new-password" : "current-password"}
-                 required
-               />
-               <motion.button
-                 type="button"
-                 onClick={() => setShowPassword((v) => !v)}
-                 className="absolute right-2 xs:right-2.5 sm:right-3 md:right-4 top-1/2 -translate-y-1/2 text-purple-400 hover:text-purple-300 transition-colors"
-                 whileHover={{ scale: 1.1 }}
-                 whileTap={{ scale: 0.9 }}
-               >
-                 {showPassword ? <FaEyeSlash className="h-3 w-3 xs:h-3.5 xs:w-3.5 sm:h-4 sm:w-4" /> : <FaEye className="h-3 w-3 xs:h-3.5 xs:w-3.5 sm:h-4 sm:w-4" />}
-               </motion.button>
-             </div>
+            <div className="relative">
+              <input
+                className="w-full p-4 text-base sm:p-3 sm:text-sm rounded-lg bg-slate-700/50 border border-purple-500/30 text-white placeholder:text-purple-300/60 outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-400/20 transition-all duration-200 font-mono pr-12"
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                autoComplete={isSignUp ? "new-password" : "current-password"}
+                required
+              />
+              <motion.button
+                type="button"
+                onClick={() => setShowPassword((v) => !v)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-purple-400 hover:text-purple-300 transition-colors"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                {showPassword ? (
+                  <FaEyeSlash className="h-6 w-6 sm:h-4 sm:w-4" />
+                ) : (
+                  <FaEye className="h-6 w-6 sm:h-4 sm:w-4" />
+                )}
+              </motion.button>
+            </div>
 
-             {isSignUp && (
-               <div className="relative">
-                 <input
-                   className="w-full p-2 xs:p-2.5 sm:p-3 md:p-4 text-xs xs:text-sm sm:text-base rounded-lg bg-slate-700/50 border border-purple-500/30 text-white placeholder:text-purple-300/60 outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-400/20 transition-all duration-200 font-mono pr-10 xs:pr-11 sm:pr-12"
-                   type={showConfirmPassword ? "text" : "password"}
-                   placeholder="Confirm Password"
-                   value={confirmPassword}
-                   onChange={(e) => setConfirmPassword(e.target.value)}
-                   autoComplete="new-password"
-                   required
-                 />
-                 <motion.button
-                   type="button"
-                   onClick={() => setShowConfirmPassword((v) => !v)}
-                   className="absolute right-2 xs:right-2.5 sm:right-3 md:right-4 top-1/2 -translate-y-1/2 text-purple-400 hover:text-purple-300 transition-colors"
-                   whileHover={{ scale: 1.1 }}
-                   whileTap={{ scale: 0.9 }}
-                 >
-                   {showConfirmPassword ? <FaEyeSlash className="h-3 w-3 xs:h-3.5 xs:w-3.5 sm:h-4 sm:w-4" /> : <FaEye className="h-3 w-3 xs:h-3.5 xs:w-3.5 sm:h-4 sm:w-4" />}
-                 </motion.button>
-               </div>
-             )}
+            {isSignUp && (
+              <div className="relative">
+                <input
+                  className="w-full p-4 text-base sm:p-3 sm:text-sm rounded-lg bg-slate-700/50 border border-purple-500/30 text-white placeholder:text-purple-300/60 outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-400/20 transition-all duration-200 font-mono pr-12"
+                  type={showConfirmPassword ? "text" : "password"}
+                  placeholder="Confirm Password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  autoComplete="new-password"
+                  required
+                />
+                <motion.button
+                  type="button"
+                  onClick={() => setShowConfirmPassword((v) => !v)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-purple-400 hover:text-purple-300 transition-colors"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  {showConfirmPassword ? (
+                    <FaEyeSlash className="h-6 w-6 sm:h-4 sm:w-4" />
+                  ) : (
+                    <FaEye className="h-6 w-6 sm:h-4 sm:w-4" />
+                  )}
+                </motion.button>
+              </div>
+            )}
 
-             <motion.button
-            className="w-full btn-gradient text-white font-mono font-semibold py-2 xs:py-2.5 sm:py-3 md:py-4 text-xs xs:text-sm sm:text-base rounded-lg disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
-            type="submit"
-            disabled={submitting}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            {submitting
-              ? isSignUp
-                ? "Creating Account..."
-                : "Signing In..."
-              : isSignUp
-              ? "Create Account"
-              : "Sign In"}
-          </motion.button>
-            <div className="mt-4 sm:mt-6 text-center">
-          <motion.p
-            className="text-xs sm:text-sm text-purple-300 cursor-pointer font-mono hover:text-purple-200 transition-colors"
-            onClick={() => setIsSignUp((v) => !v)}
-            whileHover={{ scale: 1.05 }}
-          >
-            {isSignUp
-              ? "Already have an account? Sign in"
-              : "Need an account? Sign up"}
-          </motion.p>
-        </div>
+            <motion.button
+              className="w-full btn-gradient text-white font-mono font-bold sm:font-semibold py-4 text-base sm:py-3 sm:text-base rounded-lg disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+              type="submit"
+              disabled={submitting}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              {submitting
+                ? isSignUp
+                  ? "Creating Account..."
+                  : "Signing In..."
+                : isSignUp
+                ? "Create Account"
+                : "Sign In"}
+            </motion.button>
+            <div className="mt-6 text-center">
+              <motion.p
+                className="text-sm text-purple-300 cursor-pointer font-mono hover:text-purple-200 transition-colors"
+                onClick={() => setIsSignUp((v) => !v)}
+                whileHover={{ scale: 1.05 }}
+              >
+                {isSignUp
+                  ? "Already have an account? Sign in"
+                  : "Need an account? Sign up"}
+              </motion.p>
+            </div>
           </form>
         )}
       </motion.div>
