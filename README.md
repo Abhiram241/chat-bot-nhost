@@ -8,7 +8,6 @@ This repository contains the source code for a next-generation, highly performan
 
 - [Core Architecture](#core-architecture--technical-stack)
 - [Key Features](#key-features-deep-dive)
-- [Project Structure](#project-structure)
 - [Local Development Lifecycle](#local-development-lifecycle)
 - [Build & Deployment](#build--deployment)
 - [Contribution Guidelines](#contribution-guidelines)
