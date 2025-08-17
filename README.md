@@ -80,13 +80,7 @@ npm run dev
 
 The application will be accessible at `http://localhost:5173` (or the next available port).
 
-### 3. Linting
 
-To run the linter across the entire project, use:
-
-```sh
-npm run lint
-```
 
 ## Build & Deployment
 
