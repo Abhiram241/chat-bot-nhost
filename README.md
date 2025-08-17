@@ -48,31 +48,10 @@ This project is built upon a foundation of modern, best-in-class web technologie
 
 - **Robust File Handling**: The architecture supports advanced asset handling, including glob imports and optimized static asset processing, ensuring efficient delivery of all required resources.
 
-## Project Structure
+## N8N
 
-The project adheres to a scalable, feature-oriented directory structure.
-
-```
-chatbot-frontend/
-├── public/                  # Static assets that are not processed by the build pipeline
-├── src/
-│   ├── assets/              # Images, fonts, and other static assets
-│   ├── components/          # Reusable React components (UI-centric)
-│   │   ├── common/          # Generic components (Button, Input, Modal)
-│   │   └── features/        # Feature-specific composite components
-│   ├── hooks/               # Custom React hooks for shared logic
-│   ├── pages/               # Top-level page components
-│   ├── services/            # API communication layer (e.g., Axios instances)
-│   ├── store/               # State management logic (e.g., Redux, Zustand)
-│   ├── utils/               # Utility functions
-│   ├── App.jsx              # Root React component
-│   └── main.jsx             # Application entry point
-├── .eslintrc.cjs            # ESLint configuration
-├── .gitignore               # Git ignore rules
-├── index.html               # HTML entry point template
-├── package.json             # Project dependencies and scripts
-└── vite.config.js           # Vite build and development configuration
-```
+- Added N8N with user authentication by sending the required headers from N8n to the backend providing the access to the backend .
+- It does so after seeing the logged in user credentials and after verifying it
 
 ## Local Development Lifecycle
 
